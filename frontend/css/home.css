@@ -1,0 +1,75 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,200,300,800);
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background-color:rgb(252, 8, 8) ;
+}
+
+@keyframes blink {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+model-viewer {
+  width: 90%;
+  height: 90%;
+  margin-top: 0px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  opacity: 0.95;
+}
+
+.hero {
+  position: absolute;
+  width: 850px;
+  height: auto;
+  top: 50%;
+  left: 25%;
+  transform: translate(-10%, -20%);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+.hero .greet {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 300;
+  font-style: italic;
+  background: black opacity(0.15);
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.title .cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+  background-color: #fff;
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
