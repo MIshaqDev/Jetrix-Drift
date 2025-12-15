@@ -1,18 +1,10 @@
 import express from "express";
 import emailFromHeader from "../utils/headerEmail.js";
-import {
-  createUser,
-  verifyOtp,
-  verifyUser,
-  resendOtp,
-  forgetPassword,
-  resetPassword,
-  logoutUser,
-} from "../controller/user.Controllers.js";
+import * as u from "../controller/user.Controllers.js";
 const userRouter = express.Router();
 userRouter.post("/signup", async (req, res) => {
   const user = req.body;
-  const response = await createUser(user);
+  const response = await u.createUser(user);
   if (response.error) {
     res.send({
       data: response,
@@ -32,7 +24,7 @@ userRouter.get("/verify-otp", (req, res) => {
         const otp = req.body.otp;
         const token = req.cookies.token;
         const email = emailFromHeader(`Bearer ${token}`);
-        verifyOtp(otp, email)
+        u.u.verifyOtp(otp, email)
           .then((result) => {
             res.status(200).json(result);
           })
@@ -47,7 +39,7 @@ userRouter.get("/verify-otp", (req, res) => {
 userRouter.get("/login", async (req, res) => {
     try{
         const user = req.body;
-        const response = await verifyUser(user);
+        const response = await u.verifyUser(user);
         if (response.error) {
             res.send({
                 data: response,
@@ -69,7 +61,7 @@ userRouter.get("/resend-otp", async(req, res) => {
     const token = req.cookies.token;
     try{
         const email = emailFromHeader(`Bearer ${token}`);
-        const response = await resendOtp(email);
+        const response = await u.resendOtp(email);
         res.send({
             data: response,
         });
@@ -84,7 +76,7 @@ userRouter.get("/forget-password", async (req, res) => {
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
     }
-    const response = await forgetPassword(email);
+    const response = await u.forgetPassword(email);
     res.send({
       data: response,
     });
@@ -99,7 +91,7 @@ userRouter.put("/reset-password", async (req, res) => {
     if (!email || !token || !newPassword) {
       return res.status(400).json({ error: "Email, token and new password are required" });
     }
-    const response = await resetPassword(email, token, newPassword);
+    const response = await u.resetPassword(email, token, newPassword);
     res.send({
       data: response,
     });
@@ -110,7 +102,7 @@ userRouter.put("/reset-password", async (req, res) => {
 
 userRouter.get("/logout", async (req, res) => {
   try{
-    const response = await logoutUser(res);
+    const response = await u.logoutUser(res);
     res.send({
       data: response,
     });
