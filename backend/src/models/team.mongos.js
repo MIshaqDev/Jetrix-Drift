@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import slugify from "slugify";
 
 const teamSchema = new mongoose.Schema({
-    firstname: { type:String, required: true, unique: true},
-    lastName: { type:String, required: true, unique: true},
-    fullName: {type:String, required: true, unique: true},
+    firstName: { type:String, required: true},
+    lastName: { type:String, required: true},
+    fullName: {type:String},
     country: { type:String, required: true},
     foundedIn: { type: Date, required: true},
     teamcolor: { type: String, required: true, unique: true },
@@ -12,6 +12,10 @@ const teamSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Car",
       },
+    driver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Driver",
+    },
     teamLogo: { type: String, required: true, unique: true },
     Championships: {type: Number, required: true, default: 0},
     yearsActive: {type: Number, required: true, default: 0},
@@ -24,29 +28,14 @@ const teamSchema = new mongoose.Schema({
   }
 );
 
-teamSchema.pre("save", function (next){
-    if(!this.fullName){
-        this.fullName = this.firstname + " " + this.lastName;
-    }
+teamSchema.pre("save", function (){
+    this.fullName = this.firstName + " " + this.lastName;
 });
 
-teamSchema.pre("save", function (next){
+teamSchema.pre("save", function (){
     if(!this.slug){
         this.slug = slugify(this.fullName, { lower: true, strict: true });
     }
-});
-
-teamSchema.virtual("drivers", {
-    ref: "Driver",
-    localField: "_id",
-    foreignField: "team",
-});
-
-teamSchema.virtual("Pro Drivers", {
-    ref: "Driver",
-    localField: "_id",
-    foreignField: "team",
-    match: { rank: "Pro" },
 });
 
 const Team = mongoose.model("Team", teamSchema);

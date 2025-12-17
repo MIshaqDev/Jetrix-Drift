@@ -27,10 +27,10 @@ export async function createEvent(eventDate){
 
 export async function getAllEvents(){
     try{
+        const events = await Event.find();
         if(!Event){
             throw new Error("No events found");
         }
-        const events = await Event.find();
         return events;
     }catch(error){
         return {error: error.message};
