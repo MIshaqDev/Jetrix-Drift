@@ -13,9 +13,9 @@ export async function createUser(user) {
   const exiestingUser = await User.findOne({ email: user.email });
   const existingTemp = await TempUser.findOne({ email: user.email });
   if (exiestingUser || existingTemp) {
-    throw new Error("User already exists with this email");
+    return {error: "User already exists with this email"}
   }
-  try {
+    try {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(user.password, salt);
     const opt = Math.floor(100000 + Math.random() * 900000).toString();
@@ -45,7 +45,6 @@ export async function createUser(user) {
       token: token,
     };
   } catch (error) {
-    console.log("Error creating user:", error);
     throw error;
   }
 }

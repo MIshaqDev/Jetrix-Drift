@@ -1,22 +1,26 @@
 import Event from "../models/event.mongos.js";
 
-export async function createEvent(eventDate){
+// Create Event
+export async function createEvent(eventData){
     try{
-        if(!eventDate.name || !eventDate.date){
+        // Validate required fields
+        if(!eventData.name || !eventData.date){
             throw new Error("Event name and date are required");
         }
-        const existingEvent = await Event.findOne({name: eventDate.name});
+        // Check if event with the same name already exists
+        const existingEvent = await Event.findOne({name: eventData.name});
         if(existingEvent){
             throw new Error("Event with this name already exists");
         }
+        // Create and save the new event
         const newEvent = new Event({
-            name: eventDate.name,
-            eventImage: eventDate.eventImage,
-            rounds: eventDate.rounds,
-            location: eventDate.location,
-            date: eventDate.date,
-            description: eventDate.description,
-            pricePool: eventDate.pricePool,
+            name: eventData.name,
+            eventImage: eventData.eventImage,
+            rounds: eventData.rounds,
+            location: eventData.location,
+            date: eventData.date,
+            description: eventData.description,
+            pricePool: eventData.pricePool,
         })
         await newEvent.save();
         return newEvent;
@@ -25,10 +29,12 @@ export async function createEvent(eventDate){
     }
 }
 
+// Get all events
 export async function getAllEvents(){
     try{
+        // Retrieve all events from the database
         const events = await Event.find();
-        if(!Event){
+        if(!events){
             throw new Error("No events found");
         }
         return events;
@@ -37,11 +43,14 @@ export async function getAllEvents(){
     }
 }
 
+// Get event by Name
 export async function getEventByName(eventName){
     try{
+        // Retrieve event by name
         if(!eventName){
             throw new Error("Event name is required");
         }
+        // Retrieve event by name
         const event = await Event.findOne({name: eventName});
         if(!event){
             throw new Error("Event not found");
@@ -52,14 +61,17 @@ export async function getEventByName(eventName){
     }
 }
 
+// Update event status
 export async function updateEventStatus(eventName, status){
     try{
+        // Validate inputs
         if(!eventName){
             throw new Error("Event name is required for status update");
         }
         if(!status){
             throw new Error("Status is required for update");
         }
+        // Update event status
         const event = await Event.findOneAndUpdate({name: eventName}, {status: status}, {new: true});
         if(!event){
             throw new Error("Event not found");
@@ -70,12 +82,15 @@ export async function updateEventStatus(eventName, status){
     }
     }
 
+    // Delete event
 export async function deleteEvent(eventName){
     try{
+        // Validate input
         if(!eventName){
             throw new Error("Event name is required for deletion");
         }
-        await Event.findOneAndDelete({name: eventName});
+        // Delete event
+        const event = await Event.findOneAndDelete({name: eventName});
         if(!event){
             throw new Error("Event not found");
         }
@@ -85,11 +100,14 @@ export async function deleteEvent(eventName){
     }
 }
 
+// Update event
 export async function updateEvent(eventUpdate){
     try{
+        // Validate input
         if(!eventUpdate.name){
             throw new Error("Event name is required for update");
         }
+        // Update event
         const event = await Event.findOneAndUpdate({name: eventUpdate.name}, eventUpdate, {new: true});
         if(!event){
             throw new Error("Event not found");
@@ -101,11 +119,13 @@ export async function updateEvent(eventUpdate){
     }
 }
 
+// Get event by Slug
 export async function getEventBySlug(slug) {
     try{
         if(!slug){
             throw new Error("Slug is required");
         }
+        // Retrieve event by slug
         const slugEvent = await Event.findOne({ slug: slug});
         if(!slugEvent){
             throw new Error("Event not found");

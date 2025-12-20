@@ -1,7 +1,11 @@
 import express from "express";
+import userValidation from "../middleware/userValidation.middleware.js";
 import emailFromHeader from "../utils/headerEmail.js";
 import * as u from "../controller/user.Controllers.js";
+
 const userRouter = express.Router();
+userRouter.use(userValidation);
+
 userRouter.post("/signup", async (req, res) => {
   const user = req.body;
   const response = await u.createUser(user);
@@ -24,7 +28,7 @@ userRouter.get("/verify-otp", (req, res) => {
         const otp = req.body.otp;
         const token = req.cookies.token;
         const email = emailFromHeader(`Bearer ${token}`);
-        u.u.verifyOtp(otp, email)
+        u.verifyOtp(otp, email)
           .then((result) => {
             res.status(200).json(result);
           })

@@ -2,19 +2,24 @@ import mongoose from "mongoose";
 import slugify from "slugify";
 
 const teamSchema = new mongoose.Schema({
-    firstName: { type:String, required: true},
-    lastName: { type:String, required: true},
+    firstName: { type:String, required: true, unique: true},
+    lastName: { type:String, required: true, unique: true},
     fullName: {type:String},
     country: { type:String, required: true},
     foundedIn: { type: Date, required: true},
     teamcolor: { type: String, required: true, unique: true },
-    vehical: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Car",
-      },
-    driver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Driver",
+    vehicles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Car",
+          }
+    ],
+    drivers: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Driver",
+        }],
+        default: [],
     },
     teamLogo: { type: String, required: true, unique: true },
     Championships: {type: Number, required: true, default: 0},
