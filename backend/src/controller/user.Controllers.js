@@ -49,6 +49,10 @@ export async function createUser(user) {
   }
 }
 export async function verifyOtp(otp, email) {
+  console.log("Verify Otp Call")
+  if(!email){
+    return {error: "Email must need."}
+  }
   const tempUser = await TempUser.findOne({ email: email });
   if (!tempUser) {
     return { error: "No user found with this email" };

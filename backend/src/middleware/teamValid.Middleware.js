@@ -31,6 +31,8 @@ export default async function teamValidation(req, res, next){
                 });
             }
             next();
+        }else{
+            next();
         }
     }catch(error){
         return res.status(500).json({

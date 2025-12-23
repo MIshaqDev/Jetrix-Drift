@@ -8,7 +8,7 @@ teamRouter.use(authMiddleware);
 teamRouter.use(teamValidation);
 
 // Create Team
-teamRouter.post("/add-team", async (req, res) => {
+teamRouter.post("/add", async (req, res) => {
     try{
         // call controller function
         const teamData = req.body;
@@ -137,7 +137,7 @@ teamRouter.put("/add-driver", async (req, res) => {
 });
 
 // Remove driver from team
-teamRouter.put("/remove-driver", async (req, res) => {
+teamRouter.delete("/remove-driver", async (req, res) => {
     const teamName = req.body.teamName;
     const driverId = req.body.driverId;
     try{
@@ -159,6 +159,72 @@ teamRouter.put("/remove-driver", async (req, res) => {
     }
 });
 
-// 
+// Add vehicle to team
+teamRouter.put("/add-vehicle", async (req, res) => {
+    const teamName = req.body.teamName;
+    const vehicleId = req.body.vehicleId;
+    try{
+        // call controller function
+        const updatedTeam = await t.addVehicle(teamName, vehicleId);
+        if(updatedTeam.error){
+            res.status(400).send({
+                error: updatedTeam.error,
+            })
+        }else{
+            res.status(200).send({
+                data: updatedTeam
+            })
+        }
+    }catch(error){
+        res.status(500).send({
+            error: error.message || "Failed to add vehicle to team",
+        });
+    }
+});
+
+// Delete Vehicle from team
+teamRouter.delete("/remove-vehicle", async (req, res) => {
+    const teamName = req.body.teamName;
+    const vehicleId = req.body.vehicleId;
+    try{
+        // call controller function
+        const updatedTeam = await t.removeVehicle(teamName, vehicleId);
+        if(updatedTeam.error){
+            res.status(400).send({
+                error: updatedTeam.error,
+            })
+        }else{
+            res.status(200).send({
+                data: updatedTeam
+            })
+        }
+    }catch(error){
+        res.status(500).send({
+            error: error.message || "Failed to remove vehicle from team",
+        });
+    }
+});
+
+// Delete team
+teamRouter.delete("/delete", async (req, res) => {
+    const teamName = req.body.teamName;
+    try{
+        // call controller function
+        const deletedTeam = await t.deleteTeam(teamName);
+        if(deletedTeam.error){
+            res.status(400).send({
+                error: deletedTeam.error,
+            })
+        }else{
+            res.status(200).send({
+                data: deletedTeam
+            })
+        }
+    }catch(error){
+        res.status(500).send({
+            error: error.message || "Failed to delete team",
+        });
+    }
+});
 
 export default teamRouter;

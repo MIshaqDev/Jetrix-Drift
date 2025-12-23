@@ -22,6 +22,8 @@ export default async function eventValidation(req, res, next){
                 });
             }
             next();
+        }else{
+            next();
         }
     }catch(error){
         return res.status(500).json({

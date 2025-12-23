@@ -14,7 +14,7 @@ export async function createTeam(team) {
       lastName: team.lastName,
       country: team.country,
       foundedIn: team.foundedIn,
-      teamcolor: team.teamColor,
+      teamcolor: team.teamcolor,
       teamLogo: team.teamLogo,
       Championships: team.Championships,
       yearsActive: team.yearsActive,

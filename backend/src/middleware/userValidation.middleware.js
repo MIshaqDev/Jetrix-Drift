@@ -32,6 +32,8 @@ export default async function userValidation(req, res, next) {
         return res.status(500).json({
             error: "Internal Server Error",
         });
-        }
     }
+  }else{
+    next();
+  }
 }
