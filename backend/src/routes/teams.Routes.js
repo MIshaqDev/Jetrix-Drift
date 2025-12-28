@@ -115,11 +115,11 @@ teamRouter.put("/update", async (req, res) => {
 
 // Add driver to team
 teamRouter.put("/add-driver", async (req, res) => {
-    const teamName = req.body.teamName;
-    const driverId = req.body.driverId;
+    const teamID = req.body.teamID;
+    const drifterID = req.body.drifterID;
     try{
         // call controller function
-        const updatedTeam = await t.addDriver(teamName, driverId);
+        const updatedTeam = await t.addDriver(teamID, drifterID);
         if(updatedTeam.error){
             res.status(400).send({
                 error: updatedTeam.error,
@@ -138,11 +138,13 @@ teamRouter.put("/add-driver", async (req, res) => {
 
 // Remove driver from team
 teamRouter.delete("/remove-driver", async (req, res) => {
-    const teamName = req.body.teamName;
-    const driverId = req.body.driverId;
+    const teamID = req.body.teamID;
+    const drifterID = req.body.drifterID;
+
+    console.log("Removing driver:", drifterID, "from team:", teamID);
     try{
         // call controller function
-        const updatedTeam = await t.removeDriver(teamName, driverId);
+        const updatedTeam = await t.removeDriver(teamID, drifterID);
         if(updatedTeam.error){
             res.status(400).send({
                 error: updatedTeam.error,
@@ -207,10 +209,10 @@ teamRouter.delete("/remove-vehicle", async (req, res) => {
 
 // Delete team
 teamRouter.delete("/delete", async (req, res) => {
-    const teamName = req.body.teamName;
+    const teamId = req.body.teamId;
     try{
         // call controller function
-        const deletedTeam = await t.deleteTeam(teamName);
+        const deletedTeam = await t.deleteTeam(teamId);
         if(deletedTeam.error){
             res.status(400).send({
                 error: deletedTeam.error,

@@ -16,11 +16,12 @@ export const teamType = z.object({
 });
 
 export const driverType = z.object({
-    teamName: z.string("Team name must be a string").min(4, "Team name must be at least 4 characters long").max(100, "Full name must be less than 100 characters long"),
-    driverId: z.string("Driver ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Driver ID must be a valid MongoDB ObjectId"),
+    teamID: z.string("Team ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Team ID must be a valid MongoDB ObjectId"),
+    drifterID: z.string("Driver ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Driver ID must be a valid MongoDB ObjectId"),
 });
 
 export const vehicleType = z.object({
-    teamName: z.string("Team name must be a string").min(4, "Team name must be at least 4 characters long").max(100, "Full name must be less than 100 characters long"),
-    vehicleId: z.string("Vehicle ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Vehicle ID must be a valid MongoDB ObjectId"),
+    teamID: z.string("Team ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Team ID must be a valid MongoDB ObjectId"),
+
+    vehicleID: z.string("Vehicle ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Vehicle ID must be a valid MongoDB ObjectId"),
 });

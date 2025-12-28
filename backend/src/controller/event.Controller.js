@@ -1,18 +1,19 @@
+// Import event model
 import Event from "../models/event.mongos.js";
 
-// Create Event
+// Create new event in database
 export async function createEvent(eventData){
     try{
         // Validate required fields
         if(!eventData.name || !eventData.date){
             throw new Error("Event name and date are required");
         }
-        // Check if event with the same name already exists
+        // Check for existing event with same name
         const existingEvent = await Event.findOne({name: eventData.name});
         if(existingEvent){
             throw new Error("Event with this name already exists");
         }
-        // Create and save the new event
+        // Save new event
         const newEvent = new Event({
             name: eventData.name,
             eventImage: eventData.eventImage,
@@ -29,10 +30,10 @@ export async function createEvent(eventData){
     }
 }
 
-// Get all events
+// Get all events from database
 export async function getAllEvents(){
     try{
-        // Retrieve all events from the database
+        // Retrieve all events
         const events = await Event.find();
         if(!events){
             throw new Error("No events found");
@@ -43,14 +44,14 @@ export async function getAllEvents(){
     }
 }
 
-// Get event by Name
+// Find event by name
 export async function getEventByName(eventName){
     try{
-        // Retrieve event by name
+        // Validate event name
         if(!eventName){
             throw new Error("Event name is required");
         }
-        // Retrieve event by name
+        // Search for event by name
         const event = await Event.findOne({name: eventName});
         if(!event){
             throw new Error("Event not found");
@@ -71,7 +72,7 @@ export async function updateEventStatus(eventName, status){
         if(!status){
             throw new Error("Status is required for update");
         }
-        // Update event status
+        // Update status in database
         const event = await Event.findOneAndUpdate({name: eventName}, {status: status}, {new: true});
         if(!event){
             throw new Error("Event not found");
@@ -80,16 +81,16 @@ export async function updateEventStatus(eventName, status){
     }catch(error){
         return {error: error.message};
     }
-    }
+}
 
-    // Delete event
+// Delete event from database
 export async function deleteEvent(eventName){
     try{
-        // Validate input
+        // Validate event name
         if(!eventName){
             throw new Error("Event name is required for deletion");
         }
-        // Delete event
+        // Remove event record
         const event = await Event.findOneAndDelete({name: eventName});
         if(!event){
             throw new Error("Event not found");
@@ -100,14 +101,14 @@ export async function deleteEvent(eventName){
     }
 }
 
-// Update event
+// Update event details
 export async function updateEvent(eventUpdate){
     try{
-        // Validate input
+        // Validate event name
         if(!eventUpdate.name){
             throw new Error("Event name is required for update");
         }
-        // Update event
+        // Update event record
         const event = await Event.findOneAndUpdate({name: eventUpdate.name}, eventUpdate, {new: true});
         if(!event){
             throw new Error("Event not found");
@@ -119,13 +120,14 @@ export async function updateEvent(eventUpdate){
     }
 }
 
-// Get event by Slug
+// Get event by slug URL
 export async function getEventBySlug(slug) {
     try{
+        // Validate slug parameter
         if(!slug){
             throw new Error("Slug is required");
         }
-        // Retrieve event by slug
+        // Search for event by slug
         const slugEvent = await Event.findOne({ slug: slug});
         if(!slugEvent){
             throw new Error("Event not found");
