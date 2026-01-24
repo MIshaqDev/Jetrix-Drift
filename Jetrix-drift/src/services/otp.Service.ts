@@ -1,3 +1,3 @@
-export otpService(){
+const otpService = async () => {
     
 }
