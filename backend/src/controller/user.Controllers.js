@@ -16,9 +16,9 @@ export async function createUser(user) {
   const exiestingUser = await User.findOne({ email: user.email });
   const existingTemp = await TempUser.findOne({ email: user.email });
   if (exiestingUser || existingTemp) {
-    return {error: "User already exists with this email"}
+    return { error: "User already exists with this email" }
   }
-    try {
+  try {
     // Hash password with salt
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(user.password, salt);
@@ -59,8 +59,8 @@ export async function createUser(user) {
 // Verify OTP and create permanent user account
 export async function verifyOtp(otp, email) {
   // Validate email
-  if(!email){
-    return {error: "Email must need."}
+  if (!email) {
+    return { error: "Email must need." }
   }
   // Find temporary user record
   const tempUser = await TempUser.findOne({ email: email });
@@ -98,18 +98,17 @@ export async function verifyUser(user) {
   // Compare password with hash
   const isMatch = await bcrypt.compare(password, existingUser.password);
   if (isMatch) {
+    const user = {
+      name: existingUser.name,
+      email: existingUser.email,
+      role: existingUser.role,
+    }
     // Create JWT token with user data
-    const token = jwt.sign(
-      {
-        name: existingUser.name,
-        email: existingUser.email,
-        role: existingUser.role,
-      },
-      process.env.KEY
-    );
+    const token = jwt.sign(user, process.env.KEY);
     return {
       message: "You are logged in seccessfully",
       token: token,
+      user: user,
     };
   } else {
     return { error: "Invalid credentials" };
@@ -178,17 +177,17 @@ export async function resetPassword(email, token, newPassword) {
     token: token,
   });
   // Validate token exists
-  if(!tempUser){
-    return {error: "Invalid or expired token"};
+  if (!tempUser) {
+    return { error: "Invalid or expired token" };
   }
   // Check if token has expired
-  if(tempUser.tokenExpiry < Date.now()){
-    return {error: "Invalid or expired token"};
+  if (tempUser.tokenExpiry < Date.now()) {
+    return { error: "Invalid or expired token" };
   }
   // Find user account
   const user = await User.findOne({ email: email });
-  if(!user){
-    return {error: "User not found"};
+  if (!user) {
+    return { error: "User not found" };
   }
   // Hash new password
   const salt = await bcrypt.genSalt(10);
@@ -197,33 +196,32 @@ export async function resetPassword(email, token, newPassword) {
   user.password = hash;
   await user.save();
   // Delete temporary reset token
-  await TempUser.deleteOne({email: email, token: token});
-  return {message: "Password reset successfully"};
+  await TempUser.deleteOne({ email: email, token: token });
+  return { message: "Password reset successfully" };
 }
 
 // Logout user by clearing token
-export async function logoutUser(res){
+export async function logoutUser(res) {
   // Clear authentication cookie
   res.clearCookie("token");
-  return {message: "Logged out successfully"};
-}
-
-// Change user role in database
-export async function changeUserRole(email, newRole){
-  // Update user role
-  const user = await User.findOneAndUpdate({email: email}, {role: newRole}, {new: true});
-  if(!user){
-    return {error: "User not found"};
-  }
-  return {message: `User role updated to ${newRole} successfully`, user: user};
+  return { message: "Logged out successfully" };
 }
 
 // Get user profile with pinned items
-export async function profile(email){
+export async function profile(email) {
   // Find user and populate related data
-  const user = await User.findOne({email: email}).populate("pinnedTeam").populate("pinnedDrifter").populate("pinnedCar");
-  if(!user){
-    return {error: "User not found"};
+  const user = await User.findOne({ email: email }).populate("pinnedTeam").populate("pinnedDrifter").populate("pinnedCar");
+  if (!user) {
+    return { error: "User not found" };
   }
-  return { User: user};
- }
+  return { 
+    user:{
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        cars: user.pinnedCar,
+        drifters: user.pinnedDrifter,
+        teams: user.pinnedTeam
+        }
+    };
+}

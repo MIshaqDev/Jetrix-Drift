@@ -4,7 +4,7 @@ export default async function carValidation(req, res, next){
     const path = req.path;
 
     try{
-        if(path ==='/add' || path === '/update'){
+        if(path ==='/car/add' || path === '/car/update'){
             const validation = await CarType.safeParseAsync(req.body);
 
             if(!validation.success){

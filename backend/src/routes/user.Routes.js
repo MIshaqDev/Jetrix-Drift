@@ -13,10 +13,12 @@ userRouter.use(userValidation);
 // User registration endpoint
 userRouter.post("/signup", async (req, res) => {
   const user = req.body;
+  console.log("Signup user is: ", user);
   // Call signup controller
   const response = await u.createUser(user);
+console.log("response: ", response);
   if (response.error) {
-    res.send({
+    return res.status(404).send({
       data: response,
     });
   } else {
@@ -40,10 +42,10 @@ userRouter.get("/verify-otp", (req, res) => {
         // Verify OTP with controller
         u.verifyOtp(otp, email)
           .then((result) => {
-            res.status(200).json(result);
+            return res.status(200).json(result);
           })
           .catch((error) => {
-            res.status(400).json({ error: error.message });
+            return res.status(400).json({ error: error.message });
           });
     }catch(error){
         res.status(400).json({ error: error.message });
@@ -51,26 +53,23 @@ userRouter.get("/verify-otp", (req, res) => {
 });
 
 // User login endpoint
-userRouter.get("/login", async (req, res) => {
+userRouter.post("/login", async (req, res) => {
     try{
         const user = req.body;
         // Verify user credentials
         const response = await u.verifyUser(user);
         if (response.error) {
-            res.send({
-                data: response,
-            });
+          return res.status(404).send({
+            message: response.error,
+          })
+            
         } else {
-            // Set authentication token cookie
-            res.cookie("token", response.token, {
-                httpOnly: true,
-            });
-            res.send({
-                data: response.message,
-            });
+        
+  res.cookie('token', response.token,{httpOnly: true}).send({data: response.message,
+user: response.user});
         }
     }catch(error){
-        res.status(400).json({ error: error.message });
+        res.status(400).ok(false).json({ error: error.message });
     }
 });
 
@@ -85,6 +84,11 @@ userRouter.get("/resend-otp", async(req, res) => {
         res.send({
             data: response,
         });
+        if (response.error) {
+            return res.status(404).send({
+              data: response,
+            });
+        }
     }catch(error){
         res.status(400).json({ error: error.message });
     }

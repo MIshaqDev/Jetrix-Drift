@@ -4,8 +4,17 @@ export default async function drifterValidation(req, res, next){
     const path = req.path;
 
     try{
-        if(path === '/add' || path === '/update'){
+        if(path === '/drifter/add'){
             const validation = await d.drifterSchema.safeParseAsync(req.body);
+
+            if(!validation.success){
+                return res.status(400).json({
+                    error: validation.error,
+                });
+            }
+            next();
+        }else if(path === '/drifter/update'){
+            const validation = await d.drifterSchemaUpdate.safeParseAsync(req.body);
 
             if(!validation.success){
                 return res.status(400).json({
@@ -13,7 +22,8 @@ export default async function drifterValidation(req, res, next){
                 });
             }
             next();
-        }else{
+        } 
+        else{
             next();
         }
     }

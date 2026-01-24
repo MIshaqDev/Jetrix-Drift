@@ -1,57 +1,61 @@
 // Import required modules and middleware
 import express from 'express';
-import carValidation from '../middleware/car.middleware.js';
 import * as c from '../controller/car.Controller.js';
 
 // Create router instance
 const CarRoute = express.Router();
-// Apply validation middleware
-CarRoute.use(carValidation)
-
-// Add new car endpoint
-CarRoute.post('/add', async (req, res)=> {
-    try{
-        // Create and save new car
-        const newCar = await c.addCar(req.body);
-        res.status(200).send({
-            car: newCar
-        });
-        if(newCar.error){
-            res.status(400).send({error: newCar.error});
-        }
-    }catch(error){
-        res.status(500).send({error: error.message});
-    }
-});
-
-// Update car endpoint
-CarRoute.put('/update', async (req, res)=>{
-    try{
-        // Update existing car
-        const updatedCar = await c.updateCar(req.body);
-        res.status(200).send({
-            car: updatedCar
-        });
-        if(updatedCar.error){
-            res.status(400).send({error: updatedCar.error});
-        }
-    }catch(error){
-        res.status(500).send({error: error.message});
-    }
-});
 
 // Get all cars endpoint
-CarRoute.get('/all', async (req, res) =>{
+CarRoute.get('/', async (req, res) =>{
     try{
         // Retrieve all cars from database
         const cars = await c.getAllCars();
-        res.status(200).send({
+        return res.status(200).send({
             cars: cars
         });
     }catch(error){
-        res.status(500).send({error: error.message});
+        return res.status(500).send("something went wrong: ");
     }
-})
+});
+
+// Get car by slug endpoint
+CarRoute.get('/:slug', async (req, res) => {
+    try{
+        const car = await c.getCarBySlug(req.params.slug);
+        return res.status(200).send({
+            car: car
+        });
+        if(car.error){
+            return res.status(404).send("Car not found");
+        }
+    }catch(error){
+        return res.status(500).send("something went wrong: ");   
+    }
+});
+
+// Get car by ID endpoint
+CarRoute.get('/id/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const car = await c.getCarById(id);
+
+        return res.status(200).json({
+            car
+        });
+
+    } catch (error) {
+        if (error.message === "Car not found") {
+            return res.status(404).json({ error: "Car not found" });
+        }
+
+        return res.status(500).json({
+            error: "Something went wrong",
+            details: error.message
+        });
+    }
+});
+
 
 // Export router
 export default CarRoute;

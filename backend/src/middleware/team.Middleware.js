@@ -13,7 +13,7 @@ export default async function teamValidation(req, res, next){
                 });
             }
             next();
-        }else if(path === '/add-driver' || path === '/remove-driver'){
+        }else if(path === '/team/add-drifter' || path === '/team/remove-drifter'){
             const validation = await t.driverType.safeParseAsync(req.body);
 
             if(!validation.success){
@@ -22,7 +22,7 @@ export default async function teamValidation(req, res, next){
                 });
             }
             next();
-        }else if(path === '/add-vehicle' || path === '/remove-vehicle'){
+        }else if(path === '/team/add-car' || path === '/team/remove-car'){
             const validation = await t.vehicleType.safeParseAsync(req.body);
 
             if(!validation.success){

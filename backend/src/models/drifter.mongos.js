@@ -16,8 +16,7 @@ const DrifterSchema = new mongoose.Schema({
     age: { type: Number, require: true, min: [18, "Age must be at leatest 18"], max: [40, "Age must be at most 40"] },
     // Drifter nationality
     nationallity: { type: String, require: true },
-    // Current ranking/position
-    rank: { type: Number, require: true },
+    rank: {type: Number},
     // Reference to team
     team: {
         type: mongoose.Schema.Types.ObjectId,

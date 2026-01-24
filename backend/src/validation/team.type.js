@@ -23,5 +23,5 @@ export const driverType = z.object({
 export const vehicleType = z.object({
     teamID: z.string("Team ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Team ID must be a valid MongoDB ObjectId"),
 
-    vehicleID: z.string("Vehicle ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Vehicle ID must be a valid MongoDB ObjectId"),
+    carID: z.string("Car ID must be a string").regex(/^[0-9a-fA-F]{24}$/, "Car ID must be a valid MongoDB ObjectId"),
 });

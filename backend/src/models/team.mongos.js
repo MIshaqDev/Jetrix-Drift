@@ -42,6 +42,7 @@ const teamSchema = new mongoose.Schema({
     yearsActive: { type: Number, required: true, default: 0 },
     // URL-friendly slug
     slug: { type: String, unique: true },
+    slugHistory: { type: [String], default: [] }
 },
     {
         timestamps: true,
